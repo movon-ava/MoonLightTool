@@ -370,6 +370,37 @@ Implemented:
   - `.backup/20260701-200128-pre-visible-language-aa`
 - Rebuilt `foxshelf-toolbox.jar` successfully.
 
+## 2026-07-01 Git installation and GitHub push preparation
+
+User request:
+
+- Install Git to `D:\git`.
+- Push this project to `https://github.com/movon-ava/MoonLightTool.git`.
+
+Implemented:
+
+- Installed Git for Windows `2.55.0.windows.1` to `D:\git`.
+- Initialized the project as a Git repository on branch `main`.
+- Added `.gitignore` to exclude local runtime assets and large/generated files:
+  - `tools/`
+  - `data/`
+  - `.backup/`
+  - `.m2/`
+  - `bug/`
+  - `*.jar`
+- Configured local repository identity as:
+  - `user.name=movon-ava`
+  - `user.email=movon-ava@users.noreply.github.com`
+- Added remote:
+  - `origin=https://github.com/movon-ava/MoonLightTool.git`
+
+Current push status:
+
+- Local commit was created.
+- Push to GitHub is blocked by HTTPS/TLS connectivity issues from Git:
+  - Schannel reported `server closed abruptly (missing close_notify)`.
+  - OpenSSL backend reported inability to connect to `github.com:443`.
+
 ## 2026-07-01 add-entry refresh and layout adjustments
 
 User request:
