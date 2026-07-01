@@ -1,0 +1,28 @@
+# Build output
+target/
+out/
+out8/
+out-rebuild/
+target-check/
+out-check*/
+*.class
+*.jar
+
+# Local runtime assets and bundled tools
+tools/
+.m2/
+
+# Runtime data, logs, screenshots, and backups
+data/
+bug/
+.backup/
+
+# Local agent/runtime metadata
+.agents/
+.codex/
+
+# OS/editor noise
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log
