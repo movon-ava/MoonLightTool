@@ -16,6 +16,7 @@ tools/
 data/
 bug/
 .backup/
+AI_HANDOVER_REPORT.md
 
 # Local agent/runtime metadata
 .agents/
