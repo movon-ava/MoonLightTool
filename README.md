@@ -97,6 +97,9 @@ data/backup/LATEST_BACKUP.txt
 G:\MoonLight\tools
 ```
 
+> 注意：`tools/` 目录包含 JDK、反编译器、分析器等大体积第三方工具，部分单文件超过 GitHub 普通仓库 100MB 限制，因此默认不提交到 Git。  
+> 从 GitHub 拉取源码后，需要自行准备 `tools/` 目录，或从单独的 Release/网盘归档下载后解压到 `G:\MoonLight\tools`。
+
 模板生成会按类型创建目录，例如：
 
 ```text
@@ -147,11 +150,15 @@ tools\
 
 仓库只提交源码、构建脚本和文档。
 
+已提交的运行配置：
+
+- `data/toolbox-config.xml`
+
 以下内容默认不推送：
 
 - `AI_HANDOVER_REPORT.md`
 - `tools/`
-- `data/`
+- `data/backup/`
 - `.backup/`
 - `.m2/`
 - `bug/`

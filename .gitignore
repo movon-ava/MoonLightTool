@@ -11,10 +11,14 @@ out-check*/
 
 # Local runtime assets and bundled tools
 tools/
+tools*.7z
 .m2/
 
 # Runtime data, logs, screenshots, and backups
 data/
+!data/
+data/*
+!data/toolbox-config.xml
 bug/
 .backup/
 AI_HANDOVER_REPORT.md

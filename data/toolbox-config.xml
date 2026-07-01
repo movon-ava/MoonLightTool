@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_66" class="java.beans.XMLDecoder">
+ <object class="toolbox.model.ToolboxConfig" id="ToolboxConfig0">
+  <void id="ToolboxNode0" property="rootNode">
+   <void property="children">
+    <void method="add">
+     <object class="toolbox.model.ToolboxNode" id="ToolboxNode1">
+      <void property="children">
+       <void method="add">
+        <object class="toolbox.model.ToolboxNode" id="ToolboxNode2">
+         <void property="children">
+          <void method="add">
+           <object class="toolbox.model.ToolboxNode" id="ToolboxNode3">
+            <void property="children">
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#10B981</string>
+               </void>
+               <void property="description">
+                <string>由 Codex.inc 开发的一款 AI 原生集成开发环境/ Agent 平台</string>
+               </void>
+               <void property="iconKey">
+                <string>globe</string>
+               </void>
+               <void property="id">
+                <string>d16f8efa-4977-41a0-bf73-4aead333c291</string>
+               </void>
+               <void property="name">
+                <string>codex IDE</string>
+               </void>
+               <void property="tags">
+                <string>common</string>
+               </void>
+               <void property="target">
+                <string>https://openai.com/zh-Hans-CN/codex/</string>
+               </void>
+               <void property="toolKind">
+                <object class="java.lang.Enum" method="valueOf">
+                 <class>toolbox.model.ToolKind</class>
+                 <string>WEB</string>
+                </object>
+               </void>
+               <void property="type">
+                <object class="java.lang.Enum" id="NodeType0" method="valueOf">
+                 <class>toolbox.model.NodeType</class>
+                 <string>WEB</string>
+                </object>
+               </void>
+              </object>
+             </void>
+            </void>
+            <void property="colorHex">
+             <string>#F59E0B</string>
+            </void>
+            <void property="iconKey">
+             <string>moon</string>
+            </void>
+            <void property="id">
+             <string>c51d2e39-2773-47e4-8df7-94564190425a</string>
+            </void>
+            <void property="name">
+             <string>OpenAI</string>
+            </void>
+           </object>
+          </void>
+         </void>
+         <void property="colorHex">
+          <string>#F59E0B</string>
+         </void>
+         <void property="iconKey">
+          <string>moon</string>
+         </void>
+         <void property="id">
+          <string>851d326f-cf6f-4860-9b60-f101840d09ff</string>
+         </void>
+         <void property="name">
+          <string>AI</string>
+         </void>
+        </object>
+       </void>
+       <void method="add">
+        <object class="toolbox.model.ToolboxNode" id="ToolboxNode4">
+         <void property="children">
+          <void method="add">
+           <object class="toolbox.model.ToolboxNode" id="ToolboxNode5">
+            <void property="children">
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#EC4899</string>
+               </void>
+               <void property="description">
+                <string>常用的Java反编译工具，可以快速审计Class文件或jar包</string>
+               </void>
+               <void property="iconKey">
+                <string>book</string>
+               </void>
+               <void property="id">
+                <string>ae311635-8542-49a2-b08a-4de649d26801</string>
+               </void>
+               <void property="name">
+                <string>jd-jui</string>
+               </void>
+               <void property="tags">
+                <string>代码审计</string>
+               </void>
+               <void property="target">
+                <string>G:\MoonLight\tools\native\jd-jui\jd-gui.exe</string>
+               </void>
+               <void property="type">
+                <object class="java.lang.Enum" id="NodeType1" method="valueOf">
+                 <class>toolbox.model.NodeType</class>
+                 <string>TOOL</string>
+                </object>
+               </void>
+              </object>
+             </void>
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#F59E0B</string>
+               </void>
+               <void property="description">
+                <string>Bytecode Viewer作为一款全面的逆向工程工具，提供了丰富的功能集。它支持多种主流反编译引擎，包括Procyon、CFR、FernFlower等，您可以在src/main/java/the/bytecode/club/bytecodeviewer/decompilers/Decompiler.java中查看完整的反编译器列表。此外，工具还集成了APK解析、字节码编辑、恶意代码扫描等实用功能，满足逆向工程的多样化需求。</string>
+               </void>
+               <void property="iconKey">
+                <string>book</string>
+               </void>
+               <void property="id">
+                <string>493ca899-b30f-4542-8484-0c2c71c34e80</string>
+               </void>
+               <void property="name">
+                <string>BytecodeViewer</string>
+               </void>
+               <void property="tags">
+                <string>代码审计</string>
+               </void>
+               <void property="target">
+                <string>G:\MoonLight\tools\java\BytecodeViewer\Bytecode-Viewer-2.13.2.jar</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType1"/>
+               </void>
+              </object>
+             </void>
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#10B981</string>
+               </void>
+               <void property="description">
+                <string>https://github.com/changsongyang/jar-analyzer/tree/master
+
+Jar Analyzer - 一个JAR包分析工具，批量分析，SCA漏洞分析，方法调用关系搜索，字符串搜索，Spring组件分析，信息泄露检查，CFG程序分析，JVM栈帧分析，进阶表达式搜索，字节码指令级的动态调试分析，反编译JAR包一键导出，一键提取序列化数据恶意代码，一键分析BCEL字节码</string>
+               </void>
+               <void property="iconKey">
+                <string>moon</string>
+               </void>
+               <void property="id">
+                <string>03cc636c-9bd9-4d30-b0ec-f891244ddba2</string>
+               </void>
+               <void property="name">
+                <string>jar-analyzer</string>
+               </void>
+               <void property="tags">
+                <string>代码审计</string>
+               </void>
+               <void property="target">
+                <string>G:\MoonLight\tools\java\jar-analyzer-5.22-windows-full\start.exe</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType1"/>
+               </void>
+              </object>
+             </void>
+            </void>
+            <void property="colorHex">
+             <string>#F59E0B</string>
+            </void>
+            <void property="iconKey">
+             <string>moon</string>
+            </void>
+            <void property="id">
+             <string>24ed9c30-a35a-4c4b-8b0e-087a719be2bc</string>
+            </void>
+            <void property="name">
+             <string>代码审计</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="toolbox.model.ToolboxNode" id="ToolboxNode6">
+            <void property="children">
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#7C3AED</string>
+               </void>
+               <void property="description">
+                <string>java payload 构造工具</string>
+               </void>
+               <void property="iconKey">
+                <string>moon</string>
+               </void>
+               <void property="id">
+                <string>4a34ec5b-0c8d-411c-bc79-8cab280cbb7e</string>
+               </void>
+               <void property="name">
+                <string>javaChains</string>
+               </void>
+               <void property="tags">
+                <string>common</string>
+               </void>
+               <void property="target">
+                <string>G:\MoonLight\tools\java\javaChains\start.bat</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType1"/>
+               </void>
+              </object>
+             </void>
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#64748B</string>
+               </void>
+               <void property="description">
+                <string>Java反序列化 payload生成工具</string>
+               </void>
+               <void property="iconKey">
+                <string>terminal</string>
+               </void>
+               <void property="id">
+                <string>55b28523-9c9e-40a5-b4f6-4ba9df07e06e</string>
+               </void>
+               <void property="name">
+                <string>ysoserial</string>
+               </void>
+               <void property="tags">
+                <string>common</string>
+               </void>
+               <void property="target">
+                <string>G:\MoonLight\tools\java\ysoserial\ysoserial-all.jar</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType1"/>
+               </void>
+              </object>
+             </void>
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#EC4899</string>
+               </void>
+               <void property="description">
+                <string>一个面向 Java 反序列化测试的桌面 GUI 工具。  
+当前项目主要围绕：
+
+- `ysoserial`
+- `marshalsec`
+- Y4er 扩展的 `CLASS:` 模板
+
+做统一的可视化封装。</string>
+               </void>
+               <void property="iconKey">
+                <string>archive</string>
+               </void>
+               <void property="id">
+                <string>e224ea8a-4e33-479f-a801-019b5c7812af</string>
+               </void>
+               <void property="launchArguments">
+                <string>-jar YsoGUI-1.0.0.jar</string>
+               </void>
+               <void property="launcherPath">
+                <string>G:\MoonLight\tools\language\java\jdk866\bin\java.exe</string>
+               </void>
+               <void property="launcherType">
+                <object class="java.lang.Enum" method="valueOf">
+                 <class>toolbox.model.LauncherType</class>
+                 <string>CUSTOM_COMMAND</string>
+                </object>
+               </void>
+               <void property="name">
+                <string>YsoGUI</string>
+               </void>
+               <void property="tags">
+                <string>common</string>
+               </void>
+               <void property="target">
+                <string>G:\MoonLight\tools\java\YsoGUI\target\YsoGUI-1.0.0.jar</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType1"/>
+               </void>
+               <void property="workingDirectory">
+                <string>G:\MoonLight\tools\java\YsoGUI\target</string>
+               </void>
+              </object>
+             </void>
+            </void>
+            <void property="colorHex">
+             <string>#F59E0B</string>
+            </void>
+            <void property="iconKey">
+             <string>moon</string>
+            </void>
+            <void property="id">
+             <string>c9ba1d97-7eac-4585-b1c3-6de9c1195d48</string>
+            </void>
+            <void property="name">
+             <string>漏洞利用</string>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="toolbox.model.ToolboxNode">
+            <void property="colorHex">
+             <string>#F59E0B</string>
+            </void>
+            <void property="iconKey">
+             <string>moon</string>
+            </void>
+            <void property="id">
+             <string>987bdf47-f920-4a2d-bf03-dda473650ded</string>
+            </void>
+            <void property="name">
+             <string>开发</string>
+            </void>
+           </object>
+          </void>
+         </void>
+         <void property="colorHex">
+          <string>#F59E0B</string>
+         </void>
+         <void property="iconKey">
+          <string>moon</string>
+         </void>
+         <void property="id">
+          <string>ccae81c2-6039-4959-8dfa-bab83ffbadd3</string>
+         </void>
+         <void property="name">
+          <string>Java</string>
+         </void>
+        </object>
+       </void>
+      </void>
+      <void property="colorHex">
+       <string>#F59E0B</string>
+      </void>
+      <void property="iconKey">
+       <string>terminal</string>
+      </void>
+      <void property="id">
+       <string>f74461a6-0168-413d-956f-c7b139c51d95</string>
+      </void>
+      <void property="name">
+       <string>工具</string>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="toolbox.model.ToolboxNode" id="ToolboxNode7">
+      <void property="children">
+       <void method="add">
+        <object class="toolbox.model.ToolboxNode">
+         <void property="id">
+          <string>02ed5f67-5e6b-460a-a446-24380386327f</string>
+         </void>
+         <void property="name">
+          <string>GitHub</string>
+         </void>
+         <void property="target">
+          <string>https://github.com</string>
+         </void>
+         <void property="type">
+          <object idref="NodeType0"/>
+         </void>
+        </object>
+       </void>
+       <void method="add">
+        <object class="toolbox.model.ToolboxNode">
+         <void property="id">
+          <string>1f7bbda8-a23c-4184-b3d3-4120b398825c</string>
+         </void>
+         <void property="name">
+          <string>Stack Overflow</string>
+         </void>
+         <void property="target">
+          <string>https://stackoverflow.com</string>
+         </void>
+         <void property="type">
+          <object idref="NodeType0"/>
+         </void>
+        </object>
+       </void>
+       <void method="add">
+        <object class="toolbox.model.ToolboxNode" id="ToolboxNode8">
+         <void property="children">
+          <void method="add">
+           <object class="toolbox.model.ToolboxNode" id="ToolboxNode9">
+            <void property="children">
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#EC4899</string>
+               </void>
+               <void property="description">
+                <string>AgentScope Java 是面向 JVM 的开源 Agent 框架。提供 ReAct 推理、Harness 工程化基础设施、多智能体编排与 MCP/A2A 协议支持，覆盖从本地原型到企业级分布式部署全链路。</string>
+               </void>
+               <void property="iconKey">
+                <string>globe</string>
+               </void>
+               <void property="id">
+                <string>337ce09c-a557-481e-99cf-db53e8681f0d</string>
+               </void>
+               <void property="name">
+                <string>AgentScope for Java 2.0</string>
+               </void>
+               <void property="tags">
+                <string>common</string>
+               </void>
+               <void property="target">
+                <string>https://java.agentscope.io/v1/zh/intro.html</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType0"/>
+               </void>
+              </object>
+             </void>
+            </void>
+            <void property="colorHex">
+             <string>#F59E0B</string>
+            </void>
+            <void property="iconKey">
+             <string>moon</string>
+            </void>
+            <void property="id">
+             <string>eb576b02-725f-4357-b7ec-d4ad93b04c77</string>
+            </void>
+            <void property="name">
+             <string>Agent</string>
+            </void>
+           </object>
+          </void>
+         </void>
+         <void property="colorHex">
+          <string>#F59E0B</string>
+         </void>
+         <void property="iconKey">
+          <string>moon</string>
+         </void>
+         <void property="id">
+          <string>fcda382e-1689-433b-b83a-41f68908f6b2</string>
+         </void>
+         <void property="name">
+          <string>AI</string>
+         </void>
+        </object>
+       </void>
+       <void method="add">
+        <object class="toolbox.model.ToolboxNode" id="ToolboxNode10">
+         <void property="children">
+          <void method="add">
+           <object class="toolbox.model.ToolboxNode" id="ToolboxNode11">
+            <void property="children">
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#0EA5E9</string>
+               </void>
+               <void property="description">
+                <string>Y4佬的Java安全入门的笔记</string>
+               </void>
+               <void property="iconKey">
+                <string>globe</string>
+               </void>
+               <void property="id">
+                <string>e35c1bce-ecd3-4f94-9197-cc83cdbf164e</string>
+               </void>
+               <void property="name">
+                <string>Y4tacker JavaSec</string>
+               </void>
+               <void property="tags">
+                <string>common</string>
+               </void>
+               <void property="target">
+                <string>https://github.com/Y4tacker/JavaSec</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType0"/>
+               </void>
+              </object>
+             </void>
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#10B981</string>
+               </void>
+               <void property="description">
+                <string>1diot9师傅的Java安全入门笔记，入门适合这个</string>
+               </void>
+               <void property="iconKey">
+                <string>globe</string>
+               </void>
+               <void property="id">
+                <string>a950e868-a640-4e0f-8e16-d1c34942b594</string>
+               </void>
+               <void property="name">
+                <string>1diot9 JavaSec</string>
+               </void>
+               <void property="tags">
+                <string>common</string>
+               </void>
+               <void property="target">
+                <string>https://github.com/1diot9/MyJavaSecStudy</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType0"/>
+               </void>
+              </object>
+             </void>
+             <void method="add">
+              <object class="toolbox.model.ToolboxNode">
+               <void property="colorHex">
+                <string>#F59E0B</string>
+               </void>
+               <void property="description">
+                <string>Drun1baby师傅的Java安全学习</string>
+               </void>
+               <void property="iconKey">
+                <string>globe</string>
+               </void>
+               <void property="id">
+                <string>872afff4-2bda-44bb-a296-c481f55d0adc</string>
+               </void>
+               <void property="name">
+                <string>Drun1baby JavaSec</string>
+               </void>
+               <void property="tags">
+                <string>common</string>
+               </void>
+               <void property="target">
+                <string>https://github.com/Drun1baby/JavaSecurityLearning</string>
+               </void>
+               <void property="type">
+                <object idref="NodeType0"/>
+               </void>
+              </object>
+             </void>
+            </void>
+            <void property="colorHex">
+             <string>#F59E0B</string>
+            </void>
+            <void property="iconKey">
+             <string>moon</string>
+            </void>
+            <void property="id">
+             <string>e626e188-fbdd-468f-98c6-5d232ec66255</string>
+            </void>
+            <void property="name">
+             <string>Java</string>
+            </void>
+           </object>
+          </void>
+         </void>
+         <void property="colorHex">
+          <string>#F59E0B</string>
+         </void>
+         <void property="iconKey">
+          <string>moon</string>
+         </void>
+         <void property="id">
+          <string>d422c270-a41a-4f20-af99-53f7d0e18b21</string>
+         </void>
+         <void property="name">
+          <string>学习资料</string>
+         </void>
+        </object>
+       </void>
+       <void method="add">
+        <object class="toolbox.model.ToolboxNode">
+         <void property="colorHex">
+          <string>#F59E0B</string>
+         </void>
+         <void property="iconKey">
+          <string>moon</string>
+         </void>
+         <void property="id">
+          <string>2a38c4e5-1c81-4d25-9341-43a3edf3da52</string>
+         </void>
+         <void property="name">
+          <string>靶场</string>
+         </void>
+        </object>
+       </void>
+      </void>
+      <void property="colorHex">
+       <string>#10B981</string>
+      </void>
+      <void property="description">
+       <string>1111</string>
+      </void>
+      <void property="iconKey">
+       <string>globe</string>
+      </void>
+      <void property="id">
+       <string>a890d15c-8803-4f71-83b4-25d9a282a376</string>
+      </void>
+      <void property="name">
+       <string>网站</string>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="toolbox.model.ToolboxNode">
+      <void property="colorHex">
+       <string>#7C3AED</string>
+      </void>
+      <void property="description">
+       <string>可以继续往下建多层目录，用来长期收纳工具和网页。</string>
+      </void>
+      <void property="iconKey">
+       <string>archive</string>
+      </void>
+      <void property="id">
+       <string>9557581c-e873-4175-ab7b-94b77d757157</string>
+      </void>
+      <void property="name">
+       <string>文档</string>
+      </void>
+     </object>
+    </void>
+   </void>
+   <void property="id">
+    <string>78ac5037-faae-47c7-af37-b0a53f63bd58</string>
+   </void>
+  </void>
+  <void id="AppSettings0" property="settings">
+   <void property="appTitle">
+    <string>MoonLight工具箱</string>
+   </void>
+   <void property="availableTags">
+    <void method="clear"/>
+    <void method="add">
+     <string>代码审计</string>
+    </void>
+    <void method="add">
+     <string>漏洞利用</string>
+    </void>
+    <void method="add">
+     <string>AI</string>
+    </void>
+   </void>
+   <void property="welcomeText">
+    <string>按分类管理工具、网址和文档，左侧只看分类，中间看内容，右侧看详情。</string>
+   </void>
+  </void>
+ </object>
+</java>
