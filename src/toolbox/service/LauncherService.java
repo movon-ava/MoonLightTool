@@ -20,6 +20,19 @@ import java.util.concurrent.TimeUnit;
 public class LauncherService {
     private static final long CUSTOM_LAUNCH_WAIT_MILLIS = 1500L;
     private static final int MAX_LOG_CHARS = 4000;
+    private File toolsRootDirectory;
+
+    public LauncherService() {
+        this(AppPaths.defaultToolsRoot());
+    }
+
+    public LauncherService(File toolsRootDirectory) {
+        this.toolsRootDirectory = toolsRootDirectory == null ? AppPaths.defaultToolsRoot() : toolsRootDirectory;
+    }
+
+    public void setToolsRootDirectory(File toolsRootDirectory) {
+        this.toolsRootDirectory = toolsRootDirectory == null ? AppPaths.defaultToolsRoot() : toolsRootDirectory;
+    }
 
     public enum LaunchMode {
         DEFAULT("Default"),
@@ -72,7 +85,7 @@ public class LauncherService {
             throw new IOException("Launcher path is empty");
         }
 
-        File launcherFile = new File(launcherPath);
+        File launcherFile = AppPaths.resolvePath(launcherPath, toolsRootDirectory);
         if (!launcherFile.exists()) {
             throw new IOException("Launcher does not exist: " + launcherFile.getAbsolutePath());
         }
@@ -83,7 +96,7 @@ public class LauncherService {
         }
 
         List<String> command = new ArrayList<String>();
-        command.add(launcherPath);
+        command.add(launcherFile.getAbsolutePath());
         command.addAll(parseArguments(applyPlaceholders(trim(node.getLaunchArguments()), node)));
         File workingDirectory = resolveWorkingDirectory(node);
 
@@ -98,7 +111,7 @@ public class LauncherService {
 
         if (mode == LaunchMode.POWERSHELL) {
             ProcessBuilder builder = new ProcessBuilder("powershell", "-NoExit", "-NoProfile", "-Command",
-                    "& '" + escapePowerShell(launcherPath) + "'" + buildPowerShellCommandArguments(command.subList(1, command.size())));
+                    "& '" + escapePowerShell(launcherFile.getAbsolutePath()) + "'" + buildPowerShellCommandArguments(command.subList(1, command.size())));
             if (workingDirectory != null) {
                 builder.directory(workingDirectory);
             }
@@ -156,7 +169,7 @@ public class LauncherService {
             throw new IOException("Target path is empty");
         }
 
-        File file = new File(target.trim());
+        File file = AppPaths.resolvePath(target.trim(), toolsRootDirectory);
         if (!file.exists()) {
             throw new IOException("Target does not exist: " + file.getAbsolutePath());
         }
@@ -250,7 +263,7 @@ public class LauncherService {
     private File resolveWorkingDirectory(ToolboxNode node) throws IOException {
         String configured = trim(node.getWorkingDirectory());
         if (!configured.isEmpty()) {
-            File workDir = new File(applyPlaceholders(configured, node));
+            File workDir = AppPaths.resolvePath(applyPlaceholders(configured, node), toolsRootDirectory);
             if (!workDir.exists() || !workDir.isDirectory()) {
                 throw new IOException("Working directory does not exist: " + workDir.getAbsolutePath());
             }
@@ -273,16 +286,17 @@ public class LauncherService {
         if (path.isEmpty()) {
             return null;
         }
-        File file = new File(path);
+        File file = AppPaths.resolvePath(path, toolsRootDirectory);
         return file.exists() ? file : null;
     }
 
     private String applyPlaceholders(String template, ToolboxNode node) {
         return template
-                .replace("{target}", safe(node.getTarget()))
+                .replace("{target}", AppPaths.displayPath(node.getTarget(), toolsRootDirectory))
+                .replace("{targetPath}", AppPaths.displayPath(node.getTarget(), toolsRootDirectory))
                 .replace("{name}", safe(node.getName()))
-                .replace("{workingDir}", safe(node.getWorkingDirectory()))
-                .replace("{launcher}", safe(node.getLauncherPath()));
+                .replace("{workingDir}", AppPaths.displayPath(node.getWorkingDirectory(), toolsRootDirectory))
+                .replace("{launcher}", AppPaths.displayPath(node.getLauncherPath(), toolsRootDirectory));
     }
 
     private List<String> parseArguments(String text) throws IOException {

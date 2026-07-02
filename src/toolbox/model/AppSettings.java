@@ -18,7 +18,7 @@ public class AppSettings implements Serializable {
         this.appTitle = "MoonLight Toolbox";
         this.accentHex = "#1F6FEB";
         this.welcomeText = "Organize tools, documents, and links by category.";
-        this.toolsRootPath = "G:\\MoonLight\\tools";
+        this.toolsRootPath = "tools";
         this.language = "zh";
         this.availableTags = new ArrayList<String>(Arrays.asList(
                 "common", "internal", "external", "research", "dev", "ops", "other"

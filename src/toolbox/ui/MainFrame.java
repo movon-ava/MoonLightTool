@@ -4,10 +4,13 @@ import toolbox.model.AppSettings;
 import toolbox.model.LauncherType;
 import toolbox.model.NodeType;
 import toolbox.model.ToolKind;
+import toolbox.model.ToolManifest;
 import toolbox.model.ToolboxConfig;
 import toolbox.model.ToolboxNode;
+import toolbox.service.AppPaths;
 import toolbox.service.ConfigService;
 import toolbox.service.LauncherService;
+import toolbox.service.ToolManifestService;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,6 +28,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -64,8 +68,12 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.net.URISyntaxException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +89,7 @@ public class MainFrame extends JFrame {
     private final LauncherService launcherService;
     private final DefaultListModel<ToolboxNode> entryListModel;
     private final Object saveLock = new Object();
+    private File toolsRootDirectory;
     private ToolboxConfig config;
     private I18n i18n;
     private JTree tree;
@@ -121,6 +130,8 @@ public class MainFrame extends JFrame {
         normalizeSettings();
         this.i18n = new I18n(config.getSettings().getLanguage());
         this.accentColor = AppTheme.parseAccent(config.getSettings().getAccentHex());
+        this.toolsRootDirectory = AppPaths.resolveToolsRoot(config.getSettings().getToolsRootPath());
+        this.launcherService.setToolsRootDirectory(toolsRootDirectory);
 
         setTitle(config.getSettings().getAppTitle());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -157,6 +168,9 @@ public class MainFrame extends JFrame {
         }
         if (settings.getEnabledLaunchModes().isEmpty()) {
             settings.getEnabledLaunchModes().add(LauncherService.LaunchMode.DEFAULT.name());
+        }
+        if (isBlank(settings.getToolsRootPath()) || settings.getToolsRootPath().contains("G:\\MoonLight")) {
+            settings.setToolsRootPath("tools");
         }
     }
 
@@ -352,10 +366,11 @@ public class MainFrame extends JFrame {
     }
 
     private Component buildNavigatorFooter() {
-        JPanel panel = new JPanel(new GridLayout(1, 2, 10, 0));
+        JPanel panel = new JPanel(new GridLayout(1, 3, 10, 0));
         panel.setOpaque(false);
         panel.add(createGhostButton(i18n.text("展开全部", "Expand all"), e -> expandAll()));
         panel.add(createGhostButton(i18n.text("打开配置目录", "Open config"), e -> openConfigFolder()));
+        panel.add(createGhostButton(i18n.text("检测工具", "Check tools"), e -> checkTools()));
         return panel;
     }
 
@@ -826,7 +841,7 @@ public class MainFrame extends JFrame {
             return i18n.text("当前分类下共有 ", "This category contains ") + node.getChildren().size()
                     + i18n.text(" 条内容", " entries");
         }
-        return emptyAsDash(node.getTarget());
+        return emptyAsDash(AppPaths.displayPath(node.getTarget(), toolsRootDirectory));
     }
 
     private String buildPathText(ToolboxNode node) {
@@ -893,7 +908,7 @@ public class MainFrame extends JFrame {
         draft.setType(NodeType.FOLDER);
         draft.setColorHex(PRESET_COLORS[1]);
         draft.setIconKey("moon");
-        EntryEditorDialog dialog = new EntryEditorDialog(this, i18n.text("新增分类", "New category"), draft, true, config.getSettings().getAvailableTags(), i18n);
+        EntryEditorDialog dialog = new EntryEditorDialog(this, i18n.text("新增分类", "New category"), draft, true, config.getSettings().getAvailableTags(), i18n, toolsRootDirectory);
         dialog.setVisible(true);
         if (!dialog.isConfirmed()) {
             return;
@@ -908,7 +923,7 @@ public class MainFrame extends JFrame {
         ToolboxNode parent = currentCategory == null ? config.getRootNode() : currentCategory;
         ToolboxNode draft = new ToolboxNode();
         draft.setType(preferredType);
-        EntryEditorDialog dialog = new EntryEditorDialog(this, i18n.text("新增内容", "New entry"), draft, false, config.getSettings().getAvailableTags(), i18n);
+        EntryEditorDialog dialog = new EntryEditorDialog(this, i18n.text("新增内容", "New entry"), draft, false, config.getSettings().getAvailableTags(), i18n, toolsRootDirectory);
         dialog.setVisible(true);
         if (!dialog.isConfirmed()) {
             return;
@@ -926,7 +941,7 @@ public class MainFrame extends JFrame {
         }
 
         ToolboxNode snapshot = cloneForEdit(node);
-        EntryEditorDialog dialog = new EntryEditorDialog(this, i18n.text("编辑内容", "Edit entry"), snapshot, node.isContainer(), config.getSettings().getAvailableTags(), i18n);
+        EntryEditorDialog dialog = new EntryEditorDialog(this, i18n.text("编辑内容", "Edit entry"), snapshot, node.isContainer(), config.getSettings().getAvailableTags(), i18n, toolsRootDirectory);
         dialog.setVisible(true);
         if (!dialog.isConfirmed()) {
             return;
@@ -1018,6 +1033,7 @@ public class MainFrame extends JFrame {
         String oldLanguage = settings.getLanguage();
         settings.setAppTitle(dialog.getTitleValue());
         settings.setLanguage(dialog.getLanguage());
+        settings.setToolsRootPath(isBlank(dialog.getToolsRootPath()) ? "tools" : dialog.getToolsRootPath());
         I18n newI18n = new I18n(settings.getLanguage());
         if (!settings.getLanguage().equals(oldLanguage)
                 && (dialog.getTitleValue().equals(i18n.appTitle()) || dialog.getTitleValue().equals(newI18n.appTitle()))) {
@@ -1032,6 +1048,8 @@ public class MainFrame extends JFrame {
         settings.setEnabledLaunchModes(dialog.getEnabledModes());
         i18n = newI18n;
         accentColor = AppTheme.parseAccent(settings.getAccentHex());
+        toolsRootDirectory = AppPaths.resolveToolsRoot(settings.getToolsRootPath());
+        launcherService.setToolsRootDirectory(toolsRootDirectory);
         applySettings();
         saveAndRefresh(null, i18n.text("设置已保存", "Settings saved"));
     }
@@ -1102,6 +1120,225 @@ public class MainFrame extends JFrame {
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(parent);
                 setStatus(i18n.text("已打开配置目录", "Opened config directory"));
+            }
+        } catch (IOException e) {
+            showError(i18n.text("打开失败", "Open failed"), e.getMessage());
+        }
+    }
+
+    private void checkTools() {
+        try {
+            ToolManifestService service = createToolManifestService();
+            ToolManifest manifest = service.loadOrCreate();
+            List<ToolManifestService.ToolStatus> statuses = service.checkTools(manifest);
+            showToolStatusDialog(service, manifest, statuses);
+        } catch (IOException e) {
+            showError(i18n.text("检测失败", "Check failed"), e.getMessage());
+        }
+    }
+
+    private ToolManifestService createToolManifestService() {
+        return new ToolManifestService(new File(AppPaths.appHome(), "tools-manifest.xml"), toolsRootDirectory);
+    }
+
+    private void showToolStatusDialog(ToolManifestService service, ToolManifest manifest,
+                                      List<ToolManifestService.ToolStatus> statuses) {
+        StringBuilder text = new StringBuilder();
+        text.append(i18n.text("工具目录: ", "Tools root: ")).append(service.getToolsRoot().getAbsolutePath()).append("\n");
+        text.append(i18n.text("清单文件: ", "Manifest: ")).append(service.getManifestFile().getAbsolutePath()).append("\n");
+        text.append(i18n.text("清单版本: ", "Manifest version: ")).append(emptyAsDash(manifest.getVersion())).append("\n\n");
+        if (statuses.isEmpty()) {
+            text.append(i18n.text("工具清单为空。请编辑 tools-manifest.xml，填入网盘或直链下载地址。", "The manifest is empty. Edit tools-manifest.xml and add cloud-drive or direct download URLs."));
+        } else {
+            for (ToolManifestService.ToolStatus status : statuses) {
+                text.append(status.isOk() ? "[OK] " : "[MISS] ");
+                text.append(emptyAsDash(status.getEntry().getName()));
+                if (!isBlank(status.getEntry().getVersion())) {
+                    text.append("  v").append(status.getEntry().getVersion());
+                }
+                text.append("\n  ").append(status.getFile().getPath());
+                if (!status.isExists()) {
+                    text.append("\n  ").append(i18n.text("缺失，下载地址: ", "Missing, URL: ")).append(emptyAsDash(status.getEntry().getUrl()));
+                } else if (!status.isSizeMatches()) {
+                    text.append("\n  ").append(i18n.text("文件大小不匹配。", "File size does not match."));
+                }
+                text.append("\n\n");
+            }
+        }
+
+        JTextArea area = new JTextArea(text.toString(), 18, 72);
+        area.setEditable(false);
+        area.setFont(AppTheme.BODY_FONT);
+        area.setLineWrap(false);
+        JScrollPane scrollPane = new JScrollPane(area);
+
+        Object[] options = {
+                i18n.text("打开工具目录", "Open tools"),
+                i18n.text("打开清单", "Open manifest"),
+                i18n.text("打开下载链接", "Open URLs"),
+                i18n.text("下载缺失直链", "Download missing"),
+                i18n.text("关闭", "Close")
+        };
+        int result = JOptionPane.showOptionDialog(this, scrollPane, i18n.text("工具检测", "Tool check"),
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[4]);
+        if (result == 0) {
+            openDirectory(service.getToolsRoot());
+        } else if (result == 1) {
+            openFile(service.getManifestFile());
+        } else if (result == 2) {
+            openToolUrls(statuses);
+        } else if (result == 3) {
+            downloadMissingTools(statuses);
+        }
+    }
+
+    private void openToolUrls(List<ToolManifestService.ToolStatus> statuses) {
+        for (ToolManifestService.ToolStatus status : statuses) {
+            String url = status.getEntry().getUrl();
+            if (!isBlank(url)) {
+                try {
+                    Desktop.getDesktop().browse(new URL(url).toURI());
+                } catch (Exception ex) {
+                    showError(i18n.text("打开失败", "Open failed"), ex.getMessage());
+                    return;
+                }
+            }
+        }
+    }
+
+    private void downloadMissingTools(final List<ToolManifestService.ToolStatus> statuses) {
+        final List<ToolManifestService.ToolStatus> missing = new ArrayList<ToolManifestService.ToolStatus>();
+        for (ToolManifestService.ToolStatus status : statuses) {
+            if (!status.isOk() && isDirectHttpUrl(status.getEntry().getUrl())) {
+                missing.add(status);
+            }
+        }
+        if (missing.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    i18n.text("没有可直接下载的缺失工具。网盘链接请点击“打开下载链接”后手动下载并解压到工具目录。",
+                            "No missing tools have direct download URLs. For cloud-drive URLs, open the links and extract files into the tools directory manually."),
+                    i18n.text("提示", "Notice"), JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        final JProgressBar progressBar = new JProgressBar(0, missing.size());
+        progressBar.setStringPainted(true);
+        JOptionPane pane = new JOptionPane(progressBar, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION);
+        final javax.swing.JDialog dialog = pane.createDialog(this, i18n.text("下载工具", "Downloading tools"));
+        Thread worker = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int done = 0;
+                for (ToolManifestService.ToolStatus status : missing) {
+                    try {
+                        downloadTool(status);
+                    } catch (final IOException ex) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                showError(i18n.text("下载失败", "Download failed"), ex.getMessage());
+                            }
+                        });
+                        break;
+                    }
+                    done++;
+                    final int progress = done;
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setValue(progress);
+                            progressBar.setString(progress + " / " + missing.size());
+                        }
+                    });
+                }
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dispose();
+                        checkTools();
+                    }
+                });
+            }
+        }, "MoonLight-tool-download");
+        worker.setDaemon(true);
+        worker.start();
+        dialog.setVisible(true);
+    }
+
+    private void downloadTool(ToolManifestService.ToolStatus status) throws IOException {
+        File target = status.getFile();
+        File parent = target.getParentFile();
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
+            throw new IOException("Cannot create directory: " + parent.getAbsolutePath());
+        }
+        InputStream input = null;
+        FileOutputStream output = null;
+        try {
+            input = new URL(status.getEntry().getUrl()).openStream();
+            output = new FileOutputStream(target);
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = input.read(buffer)) >= 0) {
+                output.write(buffer, 0, read);
+            }
+        } finally {
+            if (input != null) {
+                input.close();
+            }
+            if (output != null) {
+                output.close();
+            }
+        }
+        if (!isBlank(status.getEntry().getSha256())) {
+            String actual = sha256(target);
+            if (!status.getEntry().getSha256().equalsIgnoreCase(actual)) {
+                throw new IOException("SHA-256 mismatch for " + target.getPath());
+            }
+        }
+    }
+
+    private boolean isDirectHttpUrl(String value) {
+        String lower = value == null ? "" : value.trim().toLowerCase();
+        return lower.startsWith("http://") || lower.startsWith("https://");
+    }
+
+    private String sha256(File file) throws IOException {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            InputStream input = null;
+            try {
+                input = new java.io.FileInputStream(file);
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = input.read(buffer)) >= 0) {
+                    digest.update(buffer, 0, read);
+                }
+            } finally {
+                if (input != null) {
+                    input.close();
+                }
+            }
+            StringBuilder builder = new StringBuilder();
+            for (byte b : digest.digest()) {
+                builder.append(String.format("%02x", b & 0xff));
+            }
+            return builder.toString();
+        } catch (Exception ex) {
+            throw new IOException("Cannot calculate SHA-256", ex);
+        }
+    }
+
+    private void openDirectory(File directory) {
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        openFile(directory);
+    }
+
+    private void openFile(File file) {
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(file);
             }
         } catch (IOException e) {
             showError(i18n.text("打开失败", "Open failed"), e.getMessage());

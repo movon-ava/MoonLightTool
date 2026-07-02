@@ -19,6 +19,7 @@ data/
 !data/
 data/*
 !data/toolbox-config.xml
+!tools-manifest.xml
 bug/
 .backup/
 AI_HANDOVER_REPORT.md

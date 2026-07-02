@@ -4,6 +4,7 @@ import toolbox.model.LauncherType;
 import toolbox.model.NodeType;
 import toolbox.model.ToolKind;
 import toolbox.model.ToolboxNode;
+import toolbox.service.AppPaths;
 import toolbox.service.ToolTemplateService;
 
 import javax.swing.BorderFactory;
@@ -59,6 +60,7 @@ public class EntryEditorDialog extends JDialog {
     private final boolean folderMode;
     private final ToolTemplateService toolTemplateService;
     private final I18n i18n;
+    private final File toolsRootDirectory;
     private JPanel customLauncherPanel;
     private boolean confirmed;
     private String randomColorHex;
@@ -84,6 +86,7 @@ public class EntryEditorDialog extends JDialog {
         super(owner, title, true);
         this.folderMode = folderMode;
         this.i18n = i18n == null ? new I18n(I18n.ZH) : i18n;
+        this.toolsRootDirectory = toolsRootDirectory == null ? DEFAULT_TOOLS_ROOT : toolsRootDirectory;
         this.toolTemplateService = new ToolTemplateService(toolsRootDirectory);
         setLayout(new BorderLayout(12, 12));
         getContentPane().setBackground(AppTheme.BACKGROUND);
@@ -562,7 +565,7 @@ public class EntryEditorDialog extends JDialog {
             ToolKind selectedKind = (ToolKind) kindBox.getSelectedItem();
             node.setType(selectedType);
             node.setToolKind(selectedKind);
-            node.setTarget(targetField.getText().trim());
+            node.setTarget(AppPaths.relativizeForConfig(targetField.getText().trim(), toolsRootDirectory));
             Object selectedTag = tagsBox.getSelectedItem();
             node.setTags(selectedTag == null ? "" : selectedTag.toString());
             node.setColorHex(randomColorHex);
@@ -571,11 +574,18 @@ public class EntryEditorDialog extends JDialog {
                     ? LauncherType.SYSTEM_OPEN
                     : (LauncherType) launcherTypeBox.getSelectedItem();
             node.setLauncherType(launcherType);
-            node.setLauncherPath(customOrEmpty(launcherType, launcherPathField.getText()));
+            node.setLauncherPath(customOrEmptyPath(launcherType, launcherPathField.getText()));
             node.setLaunchArguments(customOrEmpty(launcherType, launchArgumentsField.getText()));
-            node.setWorkingDirectory(customOrEmpty(launcherType, workingDirectoryField.getText()));
+            node.setWorkingDirectory(customOrEmptyPath(launcherType, workingDirectoryField.getText()));
             node.setSetupCommand(setupCommandField.getText().trim());
         }
+    }
+
+    private String customOrEmptyPath(LauncherType launcherType, String value) {
+        if (launcherType != LauncherType.CUSTOM_COMMAND) {
+            return "";
+        }
+        return AppPaths.relativizeForConfig(value, toolsRootDirectory);
     }
 
     private String customOrEmpty(LauncherType launcherType, String value) {

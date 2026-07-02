@@ -31,6 +31,7 @@ import java.util.List;
 
 public class SettingsDialog extends JDialog {
     private final JTextField titleField;
+    private final JTextField toolsRootField;
     private final JComboBox<String> languageBox;
     private final JPanel colorPreview;
     private final DefaultListModel<String> tagsModel;
@@ -68,10 +69,14 @@ public class SettingsDialog extends JDialog {
         titleField = new JTextField(settings.getAppTitle(), 24);
         addRow(form, gbc, 0, this.i18n.text("工具箱名称", "Toolbox name"), titleField);
 
+        toolsRootField = new JTextField(settings.getToolsRootPath(), 24);
+        toolsRootField.setFont(AppTheme.BODY_FONT);
+        addRow(form, gbc, 1, this.i18n.text("工具目录", "Tools root"), toolsRootField);
+
         languageBox = new JComboBox<String>(new String[]{this.i18n.text("中文", "Chinese"), this.i18n.text("英文", "English")});
         languageBox.setSelectedIndex(I18n.EN.equalsIgnoreCase(settings.getLanguage()) ? 1 : 0);
         languageBox.setFont(AppTheme.BODY_FONT);
-        addRow(form, gbc, 1, this.i18n.text("语言", "Language"), languageBox);
+        addRow(form, gbc, 2, this.i18n.text("语言", "Language"), languageBox);
 
         JPanel colorPanel = new JPanel(new BorderLayout(8, 0));
         colorPanel.setOpaque(false);
@@ -92,7 +97,7 @@ public class SettingsDialog extends JDialog {
 
         colorPanel.add(colorInfo, BorderLayout.CENTER);
         colorPanel.add(chooseColorButton, BorderLayout.EAST);
-        addRow(form, gbc, 2, this.i18n.text("主题色", "Theme color"), colorPanel);
+        addRow(form, gbc, 3, this.i18n.text("主题色", "Theme color"), colorPanel);
 
         tagsModel = new DefaultListModel<String>();
         for (String tag : settings.getAvailableTags()) {
@@ -120,7 +125,7 @@ public class SettingsDialog extends JDialog {
         tagPanel.setOpaque(false);
         tagPanel.add(tagsScroll, BorderLayout.CENTER);
         tagPanel.add(tagInput, BorderLayout.SOUTH);
-        addRow(form, gbc, 3, this.i18n.text("标签管理", "Tag management"), tagPanel);
+        addRow(form, gbc, 4, this.i18n.text("标签管理", "Tag management"), tagPanel);
 
         List<String> enabledModes = settings.getEnabledLaunchModes();
         defaultOpenBox = new JCheckBox(this.i18n.text("默认打开", "Open"), enabledModes.contains(LauncherService.LaunchMode.DEFAULT.name()));
@@ -134,7 +139,7 @@ public class SettingsDialog extends JDialog {
         modePanel.add(styleCheckBox(cmdOpenBox));
         modePanel.add(styleCheckBox(powershellOpenBox));
         modePanel.add(styleCheckBox(explorerOpenBox));
-        addRow(form, gbc, 4, this.i18n.text("打开方式", "Launch modes"), modePanel);
+        addRow(form, gbc, 5, this.i18n.text("打开方式", "Launch modes"), modePanel);
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         actions.setBackground(AppTheme.BACKGROUND);
@@ -242,6 +247,10 @@ public class SettingsDialog extends JDialog {
 
     public String getLanguage() {
         return languageBox.getSelectedIndex() == 1 ? I18n.EN : I18n.ZH;
+    }
+
+    public String getToolsRootPath() {
+        return toolsRootField.getText().trim();
     }
 
     public String getAccentHex() {

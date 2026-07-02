@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_441" class="java.beans.XMLDecoder">
+ <object class="toolbox.model.ToolManifest">
+  <void property="version">
+   <string>1</string>
+  </void>
+  <void property="updatedAt">
+   <string>2026-07-02</string>
+  </void>
+  <void property="note">
+   <string>将 url 替换为你的网盘链接或直链；直链可由程序下载，网盘链接会在检测窗口中打开。</string>
+  </void>
+  <void property="tools">
+   <void method="add">
+    <object class="toolbox.model.ToolManifestEntry">
+     <void property="id">
+      <string>tools-archive</string>
+     </void>
+     <void property="name">
+      <string>完整 tools 工具包</string>
+     </void>
+     <void property="version">
+      <string>2026-07-02</string>
+     </void>
+     <void property="path">
+      <string>tools</string>
+     </void>
+     <void property="url">
+      <string>https://example.com/replace-with-your-cloud-drive-link</string>
+     </void>
+     <void property="description">
+      <string>从网盘下载后解压到项目根目录，形成 tools/ 目录。</string>
+     </void>
+    </object>
+   </void>
+  </void>
+ </object>
+</java>
